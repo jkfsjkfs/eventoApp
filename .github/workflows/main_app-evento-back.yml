@@ -1,0 +1,65 @@
+name: Build and deploy Backend (Node.js) to Azure Web App - app-evento-back
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/**'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js version
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22.x'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Upload artifact for deployment
+        uses: actions/upload-artifact@v4
+        with:
+          name: node-backend
+          path: ./backend
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: node-backend
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: "${{ secrets.AZUREAPPSERVICE_CLIENTID_BC85B3EC7E8745139CBEBBAE3A59E97E }}"
+          tenant-id: "${{ secrets.AZUREAPPSERVICE_TENANTID_3CE2C456EA264283AF3451D587724A30 }}"
+          subscription-id: "${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_A6DE9B037A43419C90D3CA51B9B60736 }}"
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: "app-evento-back"
+          slot-name: "Production"
+          package: .
