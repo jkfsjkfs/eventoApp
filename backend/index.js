@@ -18,6 +18,17 @@ app.use(cors());
 
 // --- CONFIGURA la conexión aquí --- //
 const dbConfig = {
+  host: "evento.mysql.database.azure.com",
+  user: "adminapp",
+  password: "evento*2025",
+  database: "evento",
+  port: 3306,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
+};
+
+/*const dbConfig = {
   host: "10.10.11.19",
   user: "root",
   password: "aries123",
@@ -26,7 +37,8 @@ const dbConfig = {
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
-};
+};*/
+
 
 const pool = mysql.createPool(dbConfig);
 
