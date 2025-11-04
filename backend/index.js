@@ -40,7 +40,6 @@ const dbConfig = {
   queueLimit: 0
 };*/
 
-
 const pool = mysql.createPool(dbConfig);
 
 // ---------- Crear tabla si no existe ----------
