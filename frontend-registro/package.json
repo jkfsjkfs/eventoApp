@@ -1,14 +1,17 @@
 {
-  "name": "evento-frontend",
+  "name": "evento-frontend-registro",
   "version": "1.0.0",
   "private": true,
   "scripts": {
-  "start": "react-scripts start",
-  "prebuild": "chmod +x node_modules/.bin/react-scripts || echo 'Skipping chmod on Windows'",
-  "build": "react-scripts build"
+    "start": "node server.js",
+    "build": "react-scripts build",
+    "dev": "react-scripts start",
+    "test": "react-scripts test"
   },
   "dependencies": {
     "axios": "^1.4.0",
+    "express": "^4.18.2",
+    "path": "^0.12.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-qr-reader": "^3.0.0-beta-1",
