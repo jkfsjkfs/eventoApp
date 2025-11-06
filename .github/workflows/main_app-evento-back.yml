@@ -1,65 +1,65 @@
-name: Build and deploy Backend (Node.js) to Azure Web App - app-evento-back
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: Build and deploy Node.js app to Azure Web App - app-evento-back
 
 on:
   push:
     branches:
       - main
-    paths:
-      - 'backend/**'
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
-
-    defaults:
-      run:
-        working-directory: backend
+      contents: read #This is required for actions/checkout
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Set up Node.js version
         uses: actions/setup-node@v3
         with:
           node-version: '22.x'
 
-      - name: Install dependencies
-        run: npm install
+      - name: npm install, build, and test
+        run: |
+          npm install
+          npm run build --if-present
+          npm run test --if-present
 
-      - name: Upload artifact for deployment
+      - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
-          name: node-backend
-          path: ./backend
+          name: node-app
+          path: .
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
     permissions:
-      id-token: write
-      contents: read
+      id-token: write #This is required for requesting the JWT
+      contents: read #This is required for actions/checkout
 
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
-          name: node-backend
-
+          name: node-app
+      
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: "${{ secrets.AZUREAPPSERVICE_CLIENTID_BC85B3EC7E8745139CBEBBAE3A59E97E }}"
-          tenant-id: "${{ secrets.AZUREAPPSERVICE_TENANTID_3CE2C456EA264283AF3451D587724A30 }}"
-          subscription-id: "${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_A6DE9B037A43419C90D3CA51B9B60736 }}"
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_E480B8D6C18B4C90BD3C9D0C889B2BE3 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_57ADD6F7A7B6403BB59A0AF30F2E0DF8 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_B35F14109346468FA07C02ECCF5F3440 }}
 
-      - name: Deploy to Azure Web App
+      - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: "app-evento-back"
-          slot-name: "Production"
+          app-name: 'app-evento-back'
+          slot-name: 'Production'
           package: .
+          
