@@ -18,7 +18,7 @@ app.use(cors());
 
 // --- CONFIGURA la conexión aquí --- //
 const dbConfig = {
-  host: "mysql-evento.mysql.database.azure.com",
+  host: "dbevento.mysql.database.azure.com",
   user: "adminapp",
   password: "evento*2025",
   database: "evento",
